@@ -1,0 +1,219 @@
+<template>
+    <lightning-card title="Customer Loan &amp; Collection Workspace" icon-name="standard:account">
+        <div slot="actions">
+            <lightning-button
+                label="Refresh"
+                icon-name="utility:refresh"
+                onclick={handleRefresh}
+                disabled={isLoading}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-around_medium">
+            <!-- Loading State -->
+            <template if:true={isLoading}>
+                <div class="spinner-container slds-is-relative">
+                    <lightning-spinner alternative-text="Loading customer collection details" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error State -->
+            <template if:true={errorMessage}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_medium" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+
+            <!-- Main Consolidated View -->
+            <template if:true={dashboardData}>
+                <!-- SECTION 1: CUSTOMER DETAILS -->
+                <section class="workspace-section slds-m-bottom_medium" aria-label="Customer Details">
+                    <div class="section-header slds-m-bottom_small">
+                        <h3 class="slds-text-heading_small">Customer Details</h3>
+                        <span class="contactability-text">{contactabilityDisplay}</span>
+                    </div>
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <p class="field-label">Customer Name</p>
+                            <p class="field-value">{dashboardData.customer.name}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <p class="field-label">Phone Number</p>
+                            <p class="field-value">
+                                <lightning-formatted-phone value={dashboardData.customer.phoneNumber}></lightning-formatted-phone>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <p class="field-label">Email</p>
+                            <p class="field-value">
+                                <template if:true={dashboardData.customer.email}>
+                                    <lightning-formatted-email value={dashboardData.customer.email}></lightning-formatted-email>
+                                </template>
+                                <template if:false={dashboardData.customer.email}>Not Provided</template>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <p class="field-label">Branch / State</p>
+                            <p class="field-value">{branchAndState}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-m-top_xx-small">
+                            <p class="field-label">Address</p>
+                            <p class="field-value">{addressDisplay}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: LOAN DETAILS -->
+                <section class="workspace-section slds-m-bottom_medium" aria-label="Loan Details">
+                    <div class="section-header slds-m-bottom_small">
+                        <h3 class="slds-text-heading_small">Loan Details</h3>
+                        <span class="meta-caption">{loanCountLabel}</span>
+                    </div>
+
+                    <template if:true={dashboardData.hasLoans}>
+                        <div class="slds-grid slds-wrap slds-gutters_small">
+                            <template for:each={dashboardData.loans} for:item="loan">
+                                <div key={loan.id} class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <div class="record-panel slds-p-around_small">
+                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                                <p class="field-label">Loan Number</p>
+                                                <p class="field-value numeric-value">{loan.loanNumber}</p>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                                <p class="field-label">Total Loan Amount</p>
+                                                <p class="field-value numeric-value">
+                                                    <lightning-formatted-number value={loan.loanAmount} format-style="currency" currency-code="INR"></lightning-formatted-number>
+                                                </p>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                                <p class="field-label">Outstanding Amount</p>
+                                                <p class="field-value numeric-value outstanding-emphasis">
+                                                    <lightning-formatted-number value={loan.outstandingAmount} format-style="currency" currency-code="INR"></lightning-formatted-number>
+                                                </p>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                                <p class="field-label">Amount Paid</p>
+                                                <p class="field-value numeric-value paid-emphasis">
+                                                    <lightning-formatted-number value={loan.amountPaid} format-style="currency" currency-code="INR"></lightning-formatted-number>
+                                                </p>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                                                <p class="field-label">Loan Status</p>
+                                                <p class="field-value">{loan.loanStatus}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:false={dashboardData.hasLoans}>
+                        <div class="empty-state slds-p-around_medium">
+                            <p class="slds-text-body_regular">No loan accounts are currently linked to this customer.</p>
+                        </div>
+                    </template>
+                </section>
+
+                <!-- SECTION 3: COLLECTION CASE -->
+                <section class="workspace-section slds-m-bottom_medium" aria-label="Collection Case">
+                    <div class="section-header slds-m-bottom_small">
+                        <h3 class="slds-text-heading_small">Collection Case</h3>
+                        <span class="meta-caption">{caseCountLabel}</span>
+                    </div>
+
+                    <template if:true={dashboardData.hasCases}>
+                        <template for:each={dashboardData.collectionCases} for:item="cCase">
+                            <div key={cCase.id} class="record-panel slds-p-around_small slds-m-bottom_small">
+                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                        <p class="field-label">Case Number</p>
+                                        <p class="field-value numeric-value">{cCase.caseNumber}</p>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                        <p class="field-label">Case Status</p>
+                                        <p class="field-value">{cCase.caseStatus}</p>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                        <p class="field-label">Priority</p>
+                                        <p class="field-value">{cCase.priority}</p>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
+                                        <p class="field-label">Assigned Telecaller</p>
+                                        <p class="field-value">{cCase.assignedTelecallerName}</p>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5">
+                                        <p class="field-label">Next Follow-Up Date</p>
+                                        <p class="field-value numeric-value">
+                                            <template if:true={cCase.nextFollowUpDate}>
+                                                <lightning-formatted-date-time value={cCase.nextFollowUpDate}></lightning-formatted-date-time>
+                                            </template>
+                                            <template if:false={cCase.nextFollowUpDate}>Not Scheduled</template>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template if:false={dashboardData.hasCases}>
+                        <div class="empty-state slds-p-around_medium">
+                            <p class="slds-text-body_regular">No active collection cases found for this customer.</p>
+                        </div>
+                    </template>
+                </section>
+
+                <!-- SECTION 4: RISK INDICATOR -->
+                <section class="workspace-section" aria-label="Risk Indicator">
+                    <div class="section-header slds-m-bottom_small">
+                        <h3 class="slds-text-heading_small">Risk Indicator &amp; Recovery Guidance</h3>
+                        <template if:true={hasRiskAssessment}>
+                            <span class="meta-caption">Source: {dashboardData.riskAssessment.analysisSource}</span>
+                        </template>
+                    </div>
+
+                    <template if:true={hasRiskAssessment}>
+                        <div class="record-panel slds-p-around_small">
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-m-bottom_small">
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <p class="field-label">Risk Classification</p>
+                                    <p class={riskLevelClass}>{dashboardData.riskAssessment.riskLevel}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <p class="field-label">Collection Efficiency</p>
+                                    <p class="field-value numeric-value">{dashboardData.riskAssessment.collectionEfficiencyPercent}%</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <p class="field-label">Field Visit Required</p>
+                                    <p class="field-value">{dashboardData.riskAssessment.fieldVisitRequired}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <p class="field-label">Suggested Communication Tone</p>
+                                    <p class="field-value">{dashboardData.riskAssessment.suggestedCommunicationTone}</p>
+                                </div>
+                            </div>
+
+                            <div class="slds-m-bottom_small">
+                                <p class="field-label">Professional Assessment</p>
+                                <p class="assessment-text">{dashboardData.riskAssessment.threeLineAssessment}</p>
+                            </div>
+
+                            <div>
+                                <p class="field-label">Recommended Telecaller Action</p>
+                                <p class="field-value">{dashboardData.riskAssessment.recommendedTelecallerAction}</p>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:false={hasRiskAssessment}>
+                        <div class="empty-state slds-p-around_medium">
+                            <p class="slds-text-body_regular">Risk indicator will appear once at least one Loan Account is associated with this customer.</p>
+                        </div>
+                    </template>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+</template>

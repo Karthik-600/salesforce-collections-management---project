@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Escalation_Slack_Alert</name>
+        <label>Send Escalation Slack Alert</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <actionName>SlackNotificationService</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>channel</name>
+            <value>
+                <stringValue>#collection-manager-alerts</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>messageBody</name>
+            <value>
+                <elementReference>EscalationMessageFormula</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>notificationType</name>
+            <value>
+                <stringValue>CASE_ESCALATION</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <description>Triggers when a Collection_Case__c status changes to Escalated and sends a real-time Slack alert to #collection-manager-alerts.</description>
+    <formulas>
+        <name>EscalationMessageFormula</name>
+        <dataType>String</dataType>
+        <expression>"*Case Escalation Alert* [" &amp; {!$Record.Name} &amp; "] | Customer: " &amp; {!$Record.Customer__r.Name} &amp; " | Loan: " &amp; {!$Record.Loan_Account__r.Name} &amp; " | Executive: " &amp; BLANKVALUE({!$Record.Assigned_Field_Executive__r.FirstName} &amp; " " &amp; {!$Record.Assigned_Field_Executive__r.LastName}, "Unassigned") &amp; " | Reason: " &amp; BLANKVALUE({!$Record.Escalation_Reason__c}, "Not Specified")</expression>
+    </formulas>
+    <interviewLabel>Case Escalation Slack Alert {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Escalation Slack Alert</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Escalation_Slack_Alert</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Case_Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Escalated</stringValue>
+            </value>
+        </filters>
+        <object>Collection_Case__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

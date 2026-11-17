@@ -1,0 +1,86 @@
+.spinner-container {
+    min-height: 120px;
+}
+
+.workspace-section {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 1rem;
+}
+
+.workspace-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.meta-caption,
+.contactability-text {
+    font-size: 0.75rem;
+    color: #5c5c5c;
+    font-weight: 500;
+}
+
+.record-panel {
+    background-color: #fafaf9;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+}
+
+.field-label {
+    font-size: 0.75rem;
+    color: #5c5c5c;
+    margin-bottom: 0.125rem;
+}
+
+.field-value {
+    font-size: 0.875rem;
+    color: #181818;
+    font-weight: 600;
+}
+
+.numeric-value {
+    font-variant-numeric: tabular-nums;
+}
+
+.outstanding-emphasis {
+    color: #ba0517;
+}
+
+.paid-emphasis {
+    color: #2e844a;
+}
+
+.risk-high {
+    color: #ba0517;
+    font-weight: 700;
+}
+
+.risk-medium {
+    color: #a96404;
+    font-weight: 700;
+}
+
+.risk-low {
+    color: #2e844a;
+    font-weight: 700;
+}
+
+.assessment-text {
+    font-size: 0.875rem;
+    color: #2e2e2e;
+    white-space: pre-line;
+    line-height: 1.5;
+}
+
+.empty-state {
+    background-color: #fafaf9;
+    border: 1px dashed #c9c9c9;
+    border-radius: 0.25rem;
+    color: #5c5c5c;
+}

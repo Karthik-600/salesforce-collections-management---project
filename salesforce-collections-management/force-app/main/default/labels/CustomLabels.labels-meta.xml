@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Collections_Slack_Manager_Channel</fullName>
+        <categories>Slack Integration</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Slack Channel for Case Escalations</shortDescription>
+        <value>#collection-manager-alerts</value>
+    </labels>
+    <labels>
+        <fullName>Collections_Slack_Daily_Summary_Channel</fullName>
+        <categories>Slack Integration</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Slack Channel for Daily 6 PM Summary</shortDescription>
+        <value>#daily-collection-summary</value>
+    </labels>
+    <labels>
+        <fullName>Collections_Slack_Field_Updates_Channel</fullName>
+        <categories>Slack Integration</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Slack Channel for Field Executive GPS Updates</shortDescription>
+        <value>#field-executive-updates</value>
+    </labels>
+</CustomLabels>

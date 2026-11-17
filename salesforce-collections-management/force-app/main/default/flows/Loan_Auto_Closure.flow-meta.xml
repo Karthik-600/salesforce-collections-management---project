@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Execute_Loan_Auto_Closure</name>
+        <label>Execute Loan Auto Closure</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <actionName>LoanClosureService</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>loanIds</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <description>Triggers when a Loan_Account__c Outstanding_Amount__c reaches zero and Loan_Status__c is not Closed. Invokes LoanClosureService to mark the loan Closed and close associated Collection Cases.</description>
+    <interviewLabel>Loan Auto Closure {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Loan Auto Closure</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Execute_Loan_Auto_Closure</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Outstanding_Amount__c</field>
+            <operator>LessThanOrEqualTo</operator>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Loan_Status__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </filters>
+        <object>Loan_Account__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

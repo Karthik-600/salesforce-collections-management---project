@@ -1,0 +1,8 @@
+-- Audit query to inspect open NPA accounts and assigned telecallers
+SELECT Name, Customer__r.Name, Customer__r.Branch__c, Loan_Amount__c,
+       Outstanding_Amount__c, Amount_Paid__c, Collection_Efficiency__c,
+       Days_Overdue__c, Loan_Status__c, Risk_Level__c
+FROM Loan_Account__c
+WHERE Loan_Status__c != 'Closed'
+ORDER BY Days_Overdue__c DESC
+LIMIT 50

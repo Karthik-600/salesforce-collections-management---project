@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Non_Negative_Balances</fullName>
+    <active>true</active>
+    <description>Prevents negative Loan Amount, Outstanding Amount, or Amount Paid.</description>
+    <errorConditionFormula>Loan_Amount__c &lt;= 0 || Outstanding_Amount__c &lt; 0 || Amount_Paid__c &lt; 0</errorConditionFormula>
+    <errorMessage>Loan Amount must be greater than zero, and Outstanding/Paid amounts cannot be negative.</errorMessage>
+</ValidationRule>

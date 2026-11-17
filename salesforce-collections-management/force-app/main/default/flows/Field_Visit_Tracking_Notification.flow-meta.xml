@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Field_Visit_Slack_Alert</name>
+        <label>Send Field Visit Slack Alert</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <actionName>SlackNotificationService</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>channel</name>
+            <value>
+                <stringValue>#field-executive-updates</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>messageBody</name>
+            <value>
+                <elementReference>FieldVisitMessageFormula</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>notificationType</name>
+            <value>
+                <stringValue>FIELD_VISIT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>61.0</apiVersion>
+    <description>Triggers when a Field_Visit__c record is created or marked Completed, posting GPS coordinates and visit details to #field-executive-updates.</description>
+    <formulas>
+        <name>FieldVisitMessageFormula</name>
+        <dataType>String</dataType>
+        <expression>"*Field Visit Recorded* [" &amp; {!$Record.Name} &amp; "] | Customer: " &amp; {!$Record.Customer__r.Name} &amp; " | Loan: " &amp; {!$Record.Loan_Account__r.Name} &amp; " | Status: " &amp; TEXT({!$Record.Visit_Status__c}) &amp; " | GPS: " &amp; TEXT({!$Record.GPS_Latitude__c}) &amp; ", " &amp; TEXT({!$Record.GPS_Longitude__c})</expression>
+    </formulas>
+    <interviewLabel>Field Visit Tracking Notification {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Field Visit Tracking Notification</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Field_Visit_Slack_Alert</targetReference>
+        </connector>
+        <object>Field_Visit__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

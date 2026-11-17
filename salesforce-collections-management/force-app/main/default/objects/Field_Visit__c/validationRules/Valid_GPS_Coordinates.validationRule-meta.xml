@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Valid_GPS_Coordinates</fullName>
+    <active>true</active>
+    <description>Validates latitude (-90 to 90) and longitude (-180 to 180) ranges when entered.</description>
+    <errorConditionFormula>(!ISBLANK(GPS_Latitude__c) &amp;&amp; (GPS_Latitude__c &lt; -90 || GPS_Latitude__c &gt; 90)) || (!ISBLANK(GPS_Longitude__c) &amp;&amp; (GPS_Longitude__c &lt; -180 || GPS_Longitude__c &gt; 180))</errorConditionFormula>
+    <errorMessage>GPS Latitude must be between -90 and 90, and GPS Longitude must be between -180 and 180.</errorMessage>
+</ValidationRule>

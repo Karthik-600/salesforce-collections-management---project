@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Escalation_Reason</fullName>
+    <active>true</active>
+    <description>Requires an Escalation Reason whenever a Collection Case is marked Escalated.</description>
+    <errorConditionFormula>ISPICKVAL(Case_Status__c, "Escalated") &amp;&amp; ISBLANK(Escalation_Reason__c)</errorConditionFormula>
+    <errorDisplayField>Escalation_Reason__c</errorDisplayField>
+    <errorMessage>Escalation Reason is required when Case Status is set to Escalated.</errorMessage>
+</ValidationRule>
