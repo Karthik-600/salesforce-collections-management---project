@@ -1,6 +1,0 @@
-{
-  "name": "Salesforce CRM – Collections Management System",
-  "description": "Complete GitHub-ready Salesforce DX reference implementation for Srinidhi Associates NPA loan recovery, including Apex services, LWC, custom objects, Flows, Slack integration, Einstein AI design, tests, and documentation.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

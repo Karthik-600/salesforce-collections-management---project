@@ -1,8 +1,35 @@
+# Salesforce CLI
+.sf/
+.sfdx/
+.localdevserver/
+*.log
+
+# Salesforce temporary files
+salesforce/
+temp/
+tmp/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Node.js dependencies
 node_modules/
+
+# Build output
 build/
 dist/
 coverage/
+
+# Operating system files
 .DS_Store
-*.log
-.env*
-!.env.example
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+
+# Test output
+test-results/
